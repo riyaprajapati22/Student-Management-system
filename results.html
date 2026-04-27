@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Results — SMS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>📋 Results Summary</h1>
+</div>
+
+<!-- Grade Summary Cards -->
+{% set aplus = students | selectattr("grade","equalto","A+") | list | length %}
+{% set a     = students | selectattr("grade","equalto","A")  | list | length %}
+{% set b     = students | selectattr("grade","equalto","B")  | list | length %}
+{% set c     = students | selectattr("grade","equalto","C")  | list | length %}
+{% set fail  = students | selectattr("pass_fail","equalto","Fail") | list | length %}
+
+<div class="stats-grid">
+  <div class="stat-card green">
+    <div class="stat-icon">🥇</div>
+    <div class="stat-info"><h2>{{ aplus }}</h2><p>A+ Grade</p></div>
+  </div>
+  <div class="stat-card blue">
+    <div class="stat-icon">🥈</div>
+    <div class="stat-info"><h2>{{ a }}</h2><p>A Grade</p></div>
+  </div>
+  <div class="stat-card orange">
+    <div class="stat-icon">🥉</div>
+    <div class="stat-info"><h2>{{ b }}</h2><p>B Grade</p></div>
+  </div>
+  <div class="stat-card red">
+    <div class="stat-icon">❌</div>
+    <div class="stat-info"><h2>{{ fail }}</h2><p>Failed</p></div>
+  </div>
+</div>
+
+<!-- Results Table -->
+<div class="table-wrapper">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Roll No.</th>
+        <th>Name</th>
+        <th>Branch</th>
+        <th>Maths</th>
+        <th>Science</th>
+        <th>English</th>
+        <th>Computers</th>
+        <th>Total</th>
+        <th>%</th>
+        <th>Grade</th>
+        <th>Status</th>
+        <th>Attendance</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in students %}
+      <tr>
+        <td><span class="badge-roll">{{ s.roll_no }}</span></td>
+        <td>
+          <a href="{{ url_for('view_student', student_id=s.id) }}" style="color:#1a73e8; text-decoration:none;">
+            {{ s.name }}
+          </a>
+        </td>
+        <td>{{ s.branch }}</td>
+        <td>{{ s.math }}</td>
+        <td>{{ s.science }}</td>
+        <td>{{ s.english }}</td>
+        <td>{{ s.computers }}</td>
+        <td><strong>{{ s.total_marks }}/400</strong></td>
+        <td><strong>{{ s.percentage }}%</strong></td>
+        <td>
+          <span class="grade-badge grade-{{ s.grade | replace('+','plus') }}">{{ s.grade }}</span>
+        </td>
+        <td>
+          <span class="{% if s.pass_fail == 'Pass' %}text-pass{% else %}text-fail{% endif %}">
+            {{ s.pass_fail }}
+          </span>
+        </td>
+        <td>
+          <span class="{% if s.attendance >= 75 %}text-pass{% else %}text-fail{% endif %}">
+            {{ s.attendance }}%
+          </span>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="12" style="text-align:center;padding:30px;color:#aaa;">No students found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

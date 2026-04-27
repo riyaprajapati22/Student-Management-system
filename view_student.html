@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}{{ student.name }} — SMS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>👤 Student Profile</h1>
+  <div>
+    <a href="{{ url_for('edit_student', student_id=student.id) }}" class="btn-primary">✏️ Edit</a>
+    <a href="{{ url_for('students') }}" class="btn-outline">← Back</a>
+  </div>
+</div>
+
+<div class="profile-layout">
+
+  <!-- Left: Info Card -->
+  <div class="profile-card">
+    <div class="profile-avatar">
+      {{ student.name[0].upper() }}
+    </div>
+    <h2>{{ student.name }}</h2>
+    <span class="badge-roll big">Roll No. {{ student.roll_no }}</span>
+
+    <div class="profile-details">
+      <div class="detail-row">
+        <span class="detail-label">🏫 Branch</span>
+        <span>{{ student.branch or "N/A" }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">📅 Year</span>
+        <span>{{ student.year or "N/A" }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">📧 Email</span>
+        <span>{{ student.email or "N/A" }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">📱 Phone</span>
+        <span>{{ student.phone or "N/A" }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: Marks + Result -->
+  <div class="result-section">
+
+    <!-- Subject Marks -->
+    <div class="marks-card">
+      <h3>📝 Subject Marks</h3>
+
+      {% set subjects = [
+        ("Mathematics", student.math),
+        ("Science",     student.science),
+        ("English",     student.english),
+        ("Computers",   student.computers),
+      ] %}
+
+      {% for subject, marks in subjects %}
+      <div class="mark-row">
+        <span class="subject-name">{{ subject }}</span>
+        <div class="mark-bar-wrap">
+          <div class="mark-bar">
+            <div class="mark-fill {% if marks >= 60 %}green{% elif marks >= 40 %}orange{% else %}red{% endif %}"
+                 style="width: {{ marks }}%"></div>
+          </div>
+        </div>
+        <span class="mark-num">{{ marks }}/100</span>
+      </div>
+      {% endfor %}
+
+      <!-- Attendance -->
+      <div class="mark-row">
+        <span class="subject-name">📅 Attendance</span>
+        <div class="mark-bar-wrap">
+          <div class="mark-bar">
+            <div class="mark-fill {% if student.attendance >= 75 %}green{% else %}red{% endif %}"
+                 style="width: {{ student.attendance }}%"></div>
+          </div>
+        </div>
+        <span class="mark-num">{{ student.attendance }}%</span>
+      </div>
+    </div>
+
+    <!-- Result Summary -->
+    <div class="result-summary-card">
+      <h3>🏆 Result Summary</h3>
+      <div class="result-grid">
+        <div class="result-item">
+          <span class="result-val">{{ student.total_marks }}</span>
+          <span class="result-label">Total Marks</span>
+        </div>
+        <div class="result-item">
+          <span class="result-val">{{ student.percentage }}%</span>
+          <span class="result-label">Percentage</span>
+        </div>
+        <div class="result-item">
+          <span class="result-val grade-big">{{ student.grade }}</span>
+          <span class="result-label">Grade</span>
+        </div>
+        <div class="result-item">
+          <span class="result-val {% if student.pass_fail == 'Pass' %}pass{% else %}fail{% endif %}">
+            {{ student.pass_fail }}
+          </span>
+          <span class="result-label">Status</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Delete Button -->
+<div style="margin-top:20px; padding:16px; background:#fff5f5; border-radius:10px; border:1px solid #ffcdd2;">
+  <h4 style="color:#c62828; margin-bottom:8px;">⚠️ Danger Zone</h4>
+  <form method="POST" action="{{ url_for('delete_student', student_id=student.id) }}"
+        onsubmit="return confirm('Are you sure you want to delete {{ student.name }}?')">
+    <button type="submit" class="btn-delete-big">🗑️ Delete This Student</button>
+  </form>
+</div>
+
+{% endblock %}

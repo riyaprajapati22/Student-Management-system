@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block title %}All Students — SMS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>👥 All Students</h1>
+  <a href="{{ url_for('add_student') }}" class="btn-primary">+ Add Student</a>
+</div>
+
+<!-- Search Bar -->
+<div class="search-box" id="search">
+  <input
+    type="text"
+    id="searchInput"
+    placeholder="🔍 Search by name or roll number..."
+    oninput="searchStudents()"
+  />
+</div>
+
+<!-- Students Table -->
+<div class="table-wrapper">
+  <table class="data-table" id="studentsTable">
+    <thead>
+      <tr>
+        <th>Roll No.</th>
+        <th>Name</th>
+        <th>Branch</th>
+        <th>Year</th>
+        <th>Attendance</th>
+        <th>Percentage</th>
+        <th>Grade</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody">
+      {% for s in students %}
+      <tr>
+        <td><span class="badge-roll">{{ s.roll_no }}</span></td>
+        <td><strong>{{ s.name }}</strong></td>
+        <td>{{ s.branch }}</td>
+        <td>{{ s.year }}</td>
+        <td>
+          <div class="progress-bar">
+            <div class="progress-fill {% if s.attendance >= 75 %}green{% else %}red{% endif %}"
+                 style="width: {{ s.attendance }}%"></div>
+          </div>
+          {{ s.attendance }}%
+        </td>
+        <td><strong>{{ s.percentage }}%</strong></td>
+        <td>
+          <span class="grade-badge grade-{{ s.grade | replace('+','plus') }}">
+            {{ s.grade }}
+          </span>
+        </td>
+        <td class="action-btns">
+          <a href="{{ url_for('view_student', student_id=s.id) }}" class="btn-view" title="View">👁</a>
+          <a href="{{ url_for('edit_student', student_id=s.id) }}" class="btn-edit" title="Edit">✏️</a>
+          <form method="POST" action="{{ url_for('delete_student', student_id=s.id) }}"
+                onsubmit="return confirm('Delete {{ s.name }}? This cannot be undone.')">
+            <button type="submit" class="btn-delete" title="Delete">🗑️</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="8" style="text-align:center; padding:40px; color:#aaa;">
+          No students found. <a href="{{ url_for('add_student') }}">Add one!</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Search Results (shown by JS) -->
+<div id="searchResults" style="display:none">
+  <div class="table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Roll No.</th><th>Name</th><th>Branch</th>
+          <th>Year</th><th>Percentage</th><th>Grade</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="searchBody"></tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Live search using AJAX (calls /search route in Flask)
+function searchStudents() {
+  const query = document.getElementById("searchInput").value.trim();
+  const originalTable  = document.getElementById("studentsTable");
+  const searchResults  = document.getElementById("searchResults");
+  const searchBody     = document.getElementById("searchBody");
+
+  if (query === "") {
+    originalTable.style.display = "";
+    searchResults.style.display = "none";
+    return;
+  }
+
+  // Hide original, show search results
+  originalTable.style.display = "none";
+  searchResults.style.display = "";
+
+  // Call Flask /search?q=...
+  fetch("/search?q=" + encodeURIComponent(query))
+    .then(res => res.json())
+    .then(students => {
+      if (students.length === 0) {
+        searchBody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:30px;color:#aaa;">
+          No students found for "<strong>${query}</strong>"</td></tr>`;
+        return;
+      }
+
+      searchBody.innerHTML = students.map(s => `
+        <tr>
+          <td><span class="badge-roll">${s.roll_no}</span></td>
+          <td><strong>${s.name}</strong></td>
+          <td>${s.branch}</td>
+          <td>${s.year}</td>
+          <td><strong>${s.percentage}%</strong></td>
+          <td><span class="grade-badge">${s.grade}</span></td>
+          <td class="action-btns">
+            <a href="/student/${s.id}" class="btn-view">👁</a>
+            <a href="/edit/${s.id}"    class="btn-edit">✏️</a>
+          </td>
+        </tr>
+      `).join("");
+    });
+}
+</script>
+{% endblock %}

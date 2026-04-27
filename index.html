@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Management System – Login</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/auth.css"/>
+</head>
+<body class="auth-body">
+
+  <div class="auth-wrapper">
+
+    <!-- Left panel: branding -->
+    <div class="auth-left">
+      <div class="brand-block">
+        <div class="brand-icon">🎓</div>
+        <h1 class="brand-name">EduTrack</h1>
+        <p class="brand-tagline">Student Management System</p>
+      </div>
+      <ul class="feature-list">
+        <li>📋 Manage student records</li>
+        <li>📊 Track marks &amp; attendance</li>
+        <li>🔍 Search by name or roll no.</li>
+        <li>📈 View result summaries</li>
+      </ul>
+    </div>
+
+    <!-- Right panel: login form -->
+    <div class="auth-right">
+      <div class="auth-card">
+        <h2>Admin Login</h2>
+        <p class="auth-sub">Sign in to manage your students</p>
+
+        <p class="error-msg" id="authError"></p>
+
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="loginUser" class="input-field" placeholder="admin"/>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="loginPass" class="input-field" placeholder="••••••"/>
+        </div>
+
+        <button class="btn-primary full-width" onclick="handleLogin()">Login →</button>
+
+        <div class="demo-hint">
+          Demo: username <code>admin</code> &nbsp;/&nbsp; password <code>admin123</code>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script src="js/utils.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

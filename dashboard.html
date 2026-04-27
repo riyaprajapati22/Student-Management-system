@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EduTrack – Dashboard</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link rel="stylesheet" href="../css/dashboard.css"/>
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-icon">🎓</span>
+      <span class="brand-text">EduTrack</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item active">🏠 Dashboard</a>
+      <a href="students.html"  class="nav-item">👨‍🎓 Students</a>
+      <a href="marks.html"     class="nav-item">📊 Marks</a>
+      <a href="attendance.html"class="nav-item">📋 Attendance</a>
+      <a href="search.html"    class="nav-item">🔍 Search</a>
+      <a href="results.html"   class="nav-item">📈 Results</a>
+    </nav>
+    <div class="sidebar-footer">
+      <span id="adminName" class="admin-name"></span>
+      <button class="btn-logout" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <!-- Top bar -->
+    <div class="topbar">
+      <h2 class="page-title">Dashboard</h2>
+      <span class="topbar-date" id="currentDate"></span>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="stats-grid">
+      <div class="stat-card blue">
+        <div class="stat-icon">👨‍🎓</div>
+        <div class="stat-info">
+          <div class="stat-number" id="totalStudents">0</div>
+          <div class="stat-label">Total Students</div>
+        </div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-icon">✅</div>
+        <div class="stat-info">
+          <div class="stat-number" id="avgAttendance">0%</div>
+          <div class="stat-label">Avg Attendance</div>
+        </div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-icon">📊</div>
+        <div class="stat-info">
+          <div class="stat-number" id="avgMarks">0</div>
+          <div class="stat-label">Avg Marks</div>
+        </div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-icon">🏆</div>
+        <div class="stat-info">
+          <div class="stat-number" id="topScorer">—</div>
+          <div class="stat-label">Top Scorer</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Students Table -->
+    <div class="section-card">
+      <div class="section-header">
+        <h3>Recent Students</h3>
+        <a href="students.html" class="btn-outline-sm">View All →</a>
+      </div>
+      <table class="data-table" id="recentTable">
+        <thead>
+          <tr>
+            <th>Roll No.</th>
+            <th>Name</th>
+            <th>Branch</th>
+            <th>Marks</th>
+            <th>Attendance</th>
+            <th>Grade</th>
+          </tr>
+        </thead>
+        <tbody id="recentBody">
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script src="../js/utils.js"></script>
+  <script src="../js/dashboard.js"></script>
+</body>
+</html>
